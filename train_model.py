@@ -25,7 +25,7 @@ def main():
     # 2. Construção do modelo CNN
     print("\nConstruindo a arquitetura da Rede Neural Convolucional")
     model = models.Sequential([
-        # Primeira camada convolucional
+        # Primeira camada convolucional 
         layers.Conv2D(8, (3, 3), activation='relu', input_shape=(28, 28, 1)),
         layers.MaxPooling2D((2, 2)),
         
