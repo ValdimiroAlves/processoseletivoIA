@@ -309,45 +309,62 @@ Preencha todas as seções de forma clara e objetiva.
 
 
 
-**Exemplo:**
-
-👤 Identificação: **Nome Completo:**
+👤 Identificação: **VAldimiro Alves dos Santos Neto*
 
 
 ### 1️⃣ Resumo da Arquitetura do Modelo
 
-Descreva, em palavras, a arquitetura da **CNN** implementada no arquivo
-`train_model.py`.
+Para viabilizar a execução em dispositivos de Borda (Edge AI) com restrições de memória e processamento, implementei uma arquitetura de Rede Neural Convolucional (CNN) enxuta no arquivo `train_model.py`.
+
+**A rede foi estruturada da seguinte forma:**
+
+**Entrada:** Imagens normalizadas em tons de cinza redimensionadas para `(28, 28, 1)`.
+
+**Extração de Características (Feature Extraction):** Apenas duas camadas `Conv2D` sequenciais. A primeira com 8 filtros e a segunda com 16 filtros (ambas com ativação `ReLU`), intercaladas por camadas de `MaxPooling2D (2x2)`. Essa restrição de profundidade evita a explosão do número de parâmetros.
+
+**Classificação:** Uma camada `Flatten` seguida por uma camada Densa oculta pequena (32 neurônios) e a saída final `Dense` (10 neurônios) com ativação `Softmax` para a predição das 10 classes de dígitos.
 
 
 
 ### 2️⃣ Bibliotecas Utilizadas
 
-Liste as principais bibliotecas utilizadas no projeto, preferencialmente
-com suas versões.
+**TensorFlow / Keras:**
+**NumPy:**
+**Scikit-Learn:** 
+**OS:**
 
 
 
 ### 3️⃣ Técnica de Otimização do Modelo
 
-Explique qual técnica foi utilizada para otimizar o modelo no arquivo
-`optimize_model.py`.
+No script `optimize_model.py`, a otimização principal aplicada foi a Dynamic Range Quantization (Quantização de Faixa Dinâmica).
+
+Utilizando a diretriz `tf.lite.Optimize.DEFAULT` do TFLiteConverter, os "pesos" matemáticos da rede foram convertidos de ponto flutuante de alta precisão (`float32`) para números inteiros de 8 bits (`int8`). Esta escolha técnica é fundamental para sistemas embarcados (como IoT), pois além de reduzir substancialmente o uso de memória Flash/RAM, as operações com números inteiros consomem ciclos de clock menores e exigem menos energia do microcontrolador.
 
 
 
 ### 4️⃣ Resultados Obtidos
 
-Informe o principal resultado obtido após o treinamento do modelo.
+Os resultados demonstraram alta resiliência da arquitetura enxuta. As métricas exatas extraídas do conjunto de teste (10.000 imagens) foram:
+
+**Acurácia Global:** 98.45%
+
+**F1-Score Macro:** 0.9844 (comprovando a ausência de viés entre as diferentes classes).
+
+**Análise por Classe:** O modelo apresentou sua maior confiança na identificação do dígito '1' (F1-Score: 0.9925) e sua maior dificuldade na distinção do dígito '9' (F1-Score: 0.9789), um desvio esperado devido à similaridade de traços curvos, mas mantendo níveis operacionais excelentes.
+
+<img width="395" height="332" alt="image" src="https://github.com/user-attachments/assets/564184fb-a0c6-4938-b050-f4156f10368b" />
+
+
+Na etapa de otimização física, o modelo original (.h5) foi comprimido com sucesso. A quantização Int8 resultou em uma redução de memória superior a 90%, com o modelo final otimizado ocupando menos de 20.35 KB.
+
+<img width="439" height="120" alt="image" src="https://github.com/user-attachments/assets/5575dd51-1094-4808-aaa7-13d60fc6628d" />
 
 
 
-### 5️⃣ Comentários Adicionais (Opcional)
+### 5️⃣ Comentários Adicionais 
 
-Utilize este espaço para comentar:
-- Dificuldades encontradas  
-- Decisões técnicas importantes  
-- Limitações do modelo  
-- Aprendizados durante o desafio
+**Limitações do Modelo:** Sendo um classificador treinado estritamente com o dataset padrão do MNIST, a aplicação deste modelo no mundo físico dependeria de um pipeline de pré-processamento de câmera para adequar a iluminação, contraste e redimensionamento espacial antes da inferência, visto que redes rasas possuem baixa invariância a escalas e ruídos do mundo real.
 
 
 ## 🆘 Suporte
