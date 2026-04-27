@@ -309,7 +309,7 @@ Preencha todas as seções de forma clara e objetiva.
 
 
 
-👤 Identificação: **VAldimiro Alves dos Santos Neto*
+👤 Identificação: **Valdimiro Alves dos Santos Neto*
 
 
 ### 1️⃣ Resumo da Arquitetura do Modelo
